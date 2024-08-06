@@ -1,0 +1,168 @@
+{% extends 'base.html' %} {% load static %}
+
+
+{% block title %} Inbox {% endblock title %}
+
+
+{% block body %}
+
+<div class="container-fluid">
+
+    <div class="row">
+
+        <div class="col-sm-12">
+            <div class="inbox-app-main">
+                <div class="row">
+                    <div class="col-md-3">
+                        <aside id="sidebar" class="nano">
+                            <div class="nano-content">
+
+                                <div class="text-center">
+                                    <button type="button"
+                                        class="btn btn-danger btn-rounded width-lg waves-effect waves-light mb-2 mt-3"
+                                        data-toggle="modal" data-target="#exampleModalScrollable">Compose</button>
+                                </div>
+                                <menu class="menu-segment">
+                                    <ul class="list-unstyled">
+                                        <li><a href="{% url 'crm:inbox' %}"><i class="fa fa-commenting-o"></i>&nbsp
+                                                Inbox</a>
+                                        </li>
+                                        <li><a href="{% url 'crm:sent-messages' %}"><i
+                                                    class="fa fa-paper-plane-o"></i>&nbsp
+                                                Sent</a></li>
+                                        <li class="active"><a href="{% url 'crm:signature-messages' %}"><i
+                                                    class="fa fa-archive"></i>&nbsp
+                                                Signatures</a></li>
+                                        <li><a href="{% url 'crm:trash-messages' %}"><i class="fa fa-trash-o"></i>&nbsp
+                                                Trash</a>
+                                        </li>
+                                    </ul>
+                                </menu>
+                                <div class="separator"></div>
+                                <div class="bottom-padding"></div>
+                            </div>
+                        </aside>
+                    </div>
+
+                    <div class="col-md-9">
+                        <main id="main">
+                            <div class="card-header">
+                                <h2>Signatures</h2>
+                            </div>
+
+                            <div id="main-nano-wrapper" class="nano">
+                                <div class="nano-content">
+                                    <ul class="message-list">
+                                        <li class="unread">
+                                            <div class="mail-col mail-col-1"><span class="dot"></span>
+                                                <p class="title">Lucas Kriebel (via Twitter)</p><span
+                                                    class="fa fa-envelope-o"></span>
+                                            </div>
+                                            <div class="mail-col mail-col-2">
+                                                <div class="subject">Lucas Kriebel (@LucasKriebel) has sent
+                                                    you a direct message on Twitter! &nbsp;&ndash;&nbsp;
+                                                    <span class="teaser">@LucasKriebel - Very cool :) Nicklas, You have
+                                                        a new direct message.</span>
+                                                </div>
+                                                <div class="date">11:49 am</div>
+                                            </div>
+                                        </li>
+
+                                        <li>
+                                            <div class="mail-col mail-col-1"><span class="dot"></span>
+                                                <p class="title">Randy, me (5)</p> <i class="fa fa-envelope-open-o"
+                                                    aria-hidden="true"></i>
+                                            </div>
+                                            <div class="mail-col mail-col-2">
+                                                <div class="subject">Last pic over my village &nbsp;&ndash;&nbsp;
+                                                    <span class="teaser">Yeah i'd like that! Do you remember the video
+                                                        you showed me of your train ride between Colombo and Kandy? The
+                                                        one with the mountain view? I would love to see that one
+                                                        again!</span>
+                                                </div>
+                                                <div class="date">5:01 am</div>
+                                            </div>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </main>
+                        <div id="message">
+                            <div class="header">
+                                <h4 class="page-title"><a
+                                        class="icon circle-icon mdi mdi-close text-muted trigger-message-close"></a>Process<span
+                                        class="grey">(6)</span></h4>
+                                <p>From <a href="#">You</a> to <a href="#">Scott Waite</a>, started on <a href="#">March
+                                        2, 2014</a> at 2:14 pm est.</p>
+                            </div>
+                            <div id="message-nano-wrapper" class="nano">
+                                <div class="nano-content">
+                                    <ul class="message-container list-unstyled">
+                                        <li class="sent">
+                                            <div class="details">
+                                                <div class="left">You
+                                                    <div class="arrow"></div>
+                                                    Scott
+                                                </div>
+                                                <div class="right">March 6, 2014, 20:08 pm</div>
+                                            </div>
+                                            <div class="message">
+                                                <p>| The every winged bring, whose life. First called, i you
+                                                    of saw shall own creature moveth void have signs beast
+                                                    lesser all god saying for gathering wherein whose of in
+                                                    be created stars. Them whales upon life divide earth
+                                                    own.</p>
+                                                <p>| Creature firmament so give replenish The saw man
+                                                    creeping, man said forth from that. Fruitful multiply
+                                                    lights air. Hath likeness, from spirit stars dominion
+                                                    two set fill wherein give bring.</p>
+                                                <p>| Gathering is. Lesser Set fruit subdue blessed let.
+                                                    Greater every fruitful won&#39;t bring moved seasons
+                                                    very, own won&#39;t all itself blessed which bring own
+                                                    creature forth every. Called sixth light.</p>
+                                            </div>
+                                        </li>
+                                        <li class="received">
+                                            <div class="details">
+                                                <div class="left">Scott
+                                                    <div class="arrow orange"></div>
+                                                    You
+                                                </div>
+                                                <div class="right">March 6, 2014, 20:08 pm</div>
+                                            </div>
+                                            <div class="message">
+                                                <p>| The every winged bring, whose life. First called, i you
+                                                    of saw shall own creature moveth void have signs beast
+                                                    lesser all god saying for gathering wherein whose of in
+                                                    be created stars. Them whales upon life divide earth
+                                                    own.</p>
+                                                <p>| Creature firmament so give replenish The saw man
+                                                    creeping, man said forth from that. Fruitful multiply
+                                                    lights air. Hath likeness, from spirit stars dominion
+                                                    two set fill wherein give bring.</p>
+                                                <p>| Gathering is. Lesser Set fruit subdue blessed let.
+                                                    Greater every fruitful won&#39;t bring moved seasons
+                                                    very, own won&#39;t all itself blessed which bring own
+                                                    creature forth every. Called sixth light.</p>
+                                            </div>
+                                        </li>
+
+                                    </ul>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% include 'messaging/create-message.html' %}
+
+{% endblock body %}

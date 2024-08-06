@@ -1,0 +1,353 @@
+{% extends 'base.html' %} {% load static %} {% load custom_tags %}
+
+{% block title %} Dashboard {% endblock title %}
+
+
+{% block body %}
+
+<!-- Start Content-->
+<div class="container-fluid">
+    {% for message in messages %}
+    <div class="alert alert-{{message.tags}}" role="alert" style="border-radius: 50px">
+        <strong>{{message}}</strong>
+    </div>
+    {% endfor %}
+
+    <div class="row">
+        <div class="col-xl-3 col-md-6">
+            <div class="card-box widget-user">
+                <div class="text-center">
+                    <h2 class="font-weight-normal text-primary" data-plugin="counterup">{% total_invoices %}</h2>
+                    <h5>Invoices</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card-box widget-user">
+                <div class="text-center">
+                    <h2 class="font-weight-normal text-pink" data-plugin="counterup">{% total_quotes %}</h2>
+                    <h5>Quotations</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card-box widget-user">
+                <div class="text-center">
+                    <h2 class="font-weight-normal text-info" data-plugin="counterup">{% total_clients %}</h2>
+                    <h5>Clients</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card-box widget-user">
+                <div class="text-center">
+                    <h2 class="font-weight-normal text-warning">$<span
+                            data-plugin="counterup">{% total_revenue %}</span></h2>
+                    <h5>Revenue</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+
+        <div class="col-xl-6">
+            <div class="card-box">
+                <h4 class="header-title mt-0">Statistics</h4>
+
+                <div class="text-center" id="preloader1">
+                    <lord-icon
+                        src="https://cdn.lordicon.com/ymrqtsej.json"
+                        trigger="hover"
+                        style="width:250;height:250">
+                    </lord-icon>
+                </div>
+
+
+                <canvas id="Statistics"></canvas>
+                
+                <script>
+
+                    $(document).ready(function(){
+
+
+                        $.ajax({
+                            url : "{% url 'crm:dashboard-statistics' %}",
+                            success:function(data){
+                                $('#preloader1').hide()
+                                // Sample data for the bar chart
+                                var data = {
+                                    labels: data.years,
+                                    datasets: [{
+                                        label: 'Sales',
+                                        data: data.totals,
+                                        backgroundColor: 'rgba(54, 162, 235, 0.7)', // Blue bars with alpha (transparency)
+                                        borderColor: 'rgba(54, 162, 235, 1)', // Solid blue border
+                                        borderWidth: 1
+                                    }]
+                                };
+
+                                // Bar chart options
+                                var options = {
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true
+                                        },
+                                    },
+                                };
+
+                                // Get the bar chart canvas element
+                                var ctx = document.getElementById('Statistics').getContext('2d');
+
+                                // Create the bar chart
+                                var myBarChart = new Chart(ctx, {
+                                    type: 'bar',
+                                    data: data,
+                                    options: options
+                                });
+
+
+                            }
+                        })
+
+
+
+                    })
+
+                </script>
+            </div>
+        </div>
+
+        <div class="col-xl-6">
+            <div class="card-box">
+                <h4 class="header-title mt-0">Total Revenue of {% now 'Y' %}</h4>
+
+                <div class="text-center" id="preloader2">
+                    <lord-icon
+                        src="https://cdn.lordicon.com/ymrqtsej.json"
+                        trigger="hover"
+                        style="width:250;height:250">
+                    </lord-icon>
+                </div>
+
+                
+                <canvas id="monthlySale"></canvas>
+                <script>
+
+                    $(document).ready(function(){
+
+
+                        $.ajax({
+
+                            url : "{% url 'crm:dashboard-monthlysale' %}",
+
+                            success:function(data){
+
+                                $('#preloader2').hide()
+
+                                // Sample data for the line chart
+                                var data = {
+                                    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
+                                        'September', 'October', 'November', 'December'
+                                    ],
+                                    datasets: [{
+                                        label: 'Sales',
+                                        data: data.totals,
+                                        borderColor: 'rgba(75, 192, 192, 1)', // Line color
+                                        borderWidth: 2,
+                                        fill: false // Do not fill the area under the line
+                                    }]
+                                };
+
+                                // Line chart options
+                                var options = {
+                                    scales: {
+                                        x: {
+                                            title: {
+                                                display: true,
+                                                text: 'Months'
+                                            }
+                                        },
+                                        y: {
+                                            title: {
+                                                display: true,
+                                                text: 'Data'
+                                            }
+                                        },
+                                    },
+                                };
+
+                                // Get the line chart canvas element
+                                var ctx = document.getElementById('monthlySale').getContext('2d');
+
+                                // Create the line chart
+                                var myLineChart = new Chart(ctx, {
+                                    type: 'line',
+                                    data: data,
+                                    options: options,
+                                });
+
+                            }
+
+                        })
+
+                    })
+                    
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-xl-6">
+            <div class="card-box">
+                <div class="d-flex justify-content-between mb-2">
+                    <h4 class="header-title ">Recent Quotes</h4>
+                    <a href="{% url 'crm:estimates' %}">See all</a>
+                </div>
+    
+                <div id="quotes"> 
+
+                    <div class="text-center">
+                        <lord-icon
+                            src="https://cdn.lordicon.com/ymrqtsej.json"
+                            trigger="hover"
+                            style="width:250;height:250">
+                        </lord-icon>
+                    </div>
+
+                    <script>
+                        $(document).ready(function () {
+                            $.ajax({
+                                url: "{% url 'crm:dashboard-quotes' %}",
+    
+                                success: function (data) {
+                                    $('#quotes').html(data)
+                                },
+                            })
+                        })
+                    </script>
+                </div>
+    
+            </div>
+        </div>
+
+        <div class="col-xl-6">
+            <div class="card-box">
+                <div class="d-flex justify-content-between mb-2">
+                    <h4 class="header-title ">Recent Invoices</h4>
+                    <a href="{% url 'crm:invoices' %}">See all</a>
+                </div>
+    
+                <div id="invoices">
+                    <div class="text-center">
+                        <lord-icon
+                            src="https://cdn.lordicon.com/ymrqtsej.json"
+                            trigger="hover"
+                            style="width:250;height:250">
+                        </lord-icon>
+                    </div>
+
+                    <script>
+                        $(document).ready(function () {
+                            $.ajax({
+                                url: "{% url 'crm:dashboard-invoices' %}",
+    
+                                success: function (data) {
+                                    $('#invoices').html(data)
+                                },
+                            })
+                        })
+                    </script>
+                </div>
+    
+            </div>
+        </div>
+
+        <div class="col-xl-8">
+            <div class="card-box">
+                <div class="d-flex justify-content-between mb-2">
+                    <h4 class="header-title ">Contacts</h4>
+                    <a href="{% url 'crm:contacts' %}">See all</a>
+                </div>
+    
+                <div id="contacts">
+                    <div class="text-center">
+                        <lord-icon
+                            src="https://cdn.lordicon.com/ymrqtsej.json"
+                            trigger="hover"
+                            style="width:250;height:250">
+                        </lord-icon>
+                    </div>
+
+                    <script>
+                        $(document).ready(function () {
+                            $.ajax({
+                                url: "{% url 'crm:dashboard-contacts' %}",
+    
+                                success: function (data) {
+                                    $('#contacts').html(data)
+                                },
+                            })
+                        })
+                    </script>
+                </div>
+    
+            </div>
+        </div>
+
+        <div class="col-xl-4">
+            <div class="card-box">
+
+                <h4 class="header-title mt-0">Invoices/Quotes</h4>
+
+
+                <canvas id="quote_invoice_ratio"></canvas>
+
+                {% quote_invoice_ratio as ratio %}
+                <script>
+                    // Sample data for the doughnut chart
+                    var ratio = JSON.parse("{{ratio | safe}}")
+                    console.log(typeof (ratio))
+                    var data = {
+                        labels: ['Quotes', 'Invoices'],
+                        datasets: [{
+                            data: ratio,
+                            backgroundColor: ['#FF6384', '#36A2EB'],
+                            hoverBackgroundColor: ['#FF6384', '#36A2EB']
+                        }]
+                    };
+
+                    // Doughnut chart options
+                    var options = {
+                        cutoutPercentage: 70,
+                        animation: {
+                            animateScale: true
+                        }
+                    };
+
+                    // Get the doughnut chart canvas element
+                    var ctx = document.getElementById('quote_invoice_ratio').getContext('2d');
+
+                    // Create the doughnut chart
+                    var myDoughnutChart = new Chart(ctx, {
+                        type: 'doughnut',
+                        data: data,
+                        options: options
+                    });
+                </script>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+{% endblock body %}

@@ -1,0 +1,231 @@
+{% extends 'base.html' %} {% load static %} {% load crispy_forms_tags %} {% load crispy_forms_field %}
+
+{% block title %} {{invoice.title}} {% endblock title %}
+
+
+{% block body %}
+
+<div class="container-fluid">
+    {% for message in messages %}
+    <div class="alert alert-{{message.tags}}" role="alert"><strong>{{message}}</strong>
+    </div>
+    {% endfor %}
+
+    <!-- Start Content-->
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card-box">
+                    <!-- <div class="panel-heading">
+                        <h4>Invoice</h4>
+                    </div> -->
+                    <div class="panel-body">
+                        <div class="clearfix">
+                            <div class="float-left">
+                                <img src="{{cp.logo.url}}" height="100">
+                            </div>
+                            <div class="float-right">
+                                <h4>Invoice # <br>
+                                    <strong>{{invoice.invoice_number}}</strong>
+                                </h4>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-6">
+
+                                <div class="float-left">
+                                    <h4>From:</h4>
+                                    <address>
+                                        <strong>{{cp.title}}</strong><br>
+                                        {{cp.address}}<br>
+                                        {{cp.state}}, {{cp.city}}, {{cp.zip_code}}, {{cp.country}}<br>
+                                        <strong>Phone:</strong> {{cp.phone_number}}<br>
+                                        <strong>Email:</strong> {{cp.email}}
+                                    </address>
+                                </div>
+                            </div><!-- end col -->
+                            <div class="col-6">
+
+                                <div class="float-left">
+                                    <h4>To:</h4>
+                                    <address>
+                                        <strong>{{invoice.client.first_name}} {{invoice.client.last_name}}</strong><br>
+                                        {{invoice.client.address}}<br>
+                                        {{invoice.client.state}}, {{invoice.client.city}}, {{invoice.client.zip_code}}, {{invoice.client.country}}<br>
+                                        <strong>Phone:</strong> {{invoice.client.phone_number}}<br>
+                                        <strong>Email:</strong> {{invoice.client.email}}
+                                    </address>
+                                </div>
+                            </div><!-- end col -->
+                        </div>
+                        <!-- end row -->
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table mt-4">
+                                        <thead>
+                                            <tr>
+                                                <th width="90%">Name</th>
+                                                <th class="text-right">amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            {% for i in invoice.items.all %}
+                                            <tr>
+                                                <td>
+                                                    <h4>{{i.item.name}}</h4>
+                                                    <small>{{i.item.description}}</small>
+                                                </td>
+                                                <td class="text-right">
+                                                    <p>${{i.item.amount}}</p>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-8 col-8">
+
+                                <div class="clearfix mt-4">
+                                    <h5 class="small text-dark"><strong>INTERNAL NOTES</strong> </h5>
+
+                                    <small>
+                                        {{invoice.internal_notes}}
+                                    </small>
+                                </div>
+
+                                <div class="clearfix mt-4">
+                                    <h5 class="small text-dark"><strong>TERMS AND CONDITIONS</strong> </h5>
+
+                                    <small>
+                                        {{invoice.terms_and_conditions}}
+                                    </small>
+                                </div>
+
+                                <br>
+
+                                <div class="clearfix mt-4">
+                                    <h5 class="small text-dark"><strong>PAYMENT DESCRIPTION</strong> </h5>
+
+                                    <small>
+                                        {{invoice.payment_description}}
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-xl-2 col-4 offset-xl-2">
+                                <p class="text-right"><b>Sub-total:</b> ${{invoice.sub_total}} </p>
+                                <p class="text-right">VAT: ${{invoice.taxes_total}}</p>
+                                <p class="text-right">Discount: ${{invoice.discounts_total}}</p>
+                                <h3 class="text-right">Grand Total: ${{invoice.grand_total}} </h3>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="d-print-none">
+                            <div class="float-right">
+                                <a href="{% url 'crm:invoices' %}"
+                                    class="btn btn-outline-secondary waves-effect waves-light"><i
+                                        class="fa fa-arrow-left"></i> Back</a>
+                                <a href="javascript:window.print()" class="btn btn-dark waves-effect waves-light"><i
+                                        class="fa fa-print"></i></a>
+
+                                <a type="button"  data-toggle="modal" data-target="#deleteModal" class="btn btn-danger waves-effect waves-light text-light"><i class="fa fa-trash mr-1"></i> Delete</a>
+
+                                <a type="button"  data-toggle="modal" data-target="#updateModal" class="btn btn-primary text-light waves-effect waves-light"><i class="fa fa-pencil-square mr-1"></i> Update</a>
+                                        
+                                <!-- Update Modal -->
+                                <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-lg modal-scrollable" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Update {{invoice}}</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                            </div>
+                                            <form method="POST">
+                                                {% csrf_token %}
+                                                <div class="modal-body">
+                                                    <div class="container-fluid">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                {{form.client|as_crispy_field}}
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                {{form.due_date|as_crispy_field}}
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                {{form.status|as_crispy_field}}
+                                                            </div>
+                                                            <div class="col-md-9">
+                                                                {{form.title|as_crispy_field}}
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                {{form.internal_notes|as_crispy_field}}
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                {{form.terms_and_conditions|as_crispy_field}}
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                {{form.payment_description|as_crispy_field}}
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    <button type="submit" name="update" class="btn btn-primary">Update</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Delete Modal -->
+                                <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-sm modal-scrollable" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-body">
+                                                <div class="container-fluid p-3">
+                                                    <div class="text-center mb-3">
+                                                        <h4> Do you really want to delete? <br> <small class="text-danger">This action will be irreversible</small></h4>
+                                                        
+                                                    </div>
+                                                    <div class="d-flex justify-content-around">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                        <a href="{% url 'crm:delete-invoice' invoice.id %}" class="btn btn-danger">Delete</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <!-- end row -->
+
+    </div> <!-- container-fluid -->
+
+</div> <!-- content -->
+
+
+
+
+{% endblock body %}

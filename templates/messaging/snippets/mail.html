@@ -1,0 +1,61 @@
+<div class="header">
+    <h4 class="page-title"><a class="icon circle-icon mdi mdi-close text-muted trigger-message-close"></a>Email<span
+            class="grey"></span>
+    </h4>
+
+    <p>
+        From
+
+        {% if msg.sender ==  request.user %}
+        <span class="text-primary">You</span>
+        {% else %}
+        <span class="text-primary">{{msg.sender.first_name|title}} {{msg.sender.last_name|title}}</span>
+        {% endif %}
+
+        to
+
+        {% if 'inbox' in request.META.HTTP_REFERER or 'trash' in request.META.HTTP_REFERER %}
+        <span class="text-primary">You</span>
+        {% elif 'sent' in request.META.HTTP_REFERER %}
+        <span class="text-primary">
+            {% for i in recepients %}
+            {{i.user.first_name|title}} {{i.user.last_name|title}},
+            {% endfor %}
+        </span>
+        {% endif %}
+
+        , on
+        <span class="text-primary">{{msg.created.date}}</span>
+        at <span class="text-primary">{{msg.created.time}}</span>.
+    </p>
+</div>
+<div id="message-nano-wrapper" class="nano">
+    <div class="nano-content">
+        <ul class="message-container list-unstyled">
+            <li class="sent">
+                <div class="details">
+                    <div class="left">
+                        {% if msg.sender ==  request.user %}
+                        You
+                        {% else %}
+                        {{msg.sender.first_name|title}} {{msg.sender.last_name|title}}
+                        {% endif %}
+                        <div class="arrow"></div>
+                        {% if 'inbox' in request.META.HTTP_REFERER or 'trash' in request.META.HTTP_REFERER  %}
+                        You
+                        {% elif 'sent' in request.META.HTTP_REFERER %}
+                        {% for i in recepients %}
+                        {{i.user.first_name|title}} {{i.user.last_name|title}},
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="right">{{msg.created}}</div>
+                </div>
+                <div class="message">
+                    {{msg.body|safe}}
+                </div>
+            </li>
+        </ul>
+
+    </div>
+</div>

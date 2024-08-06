@@ -1,0 +1,342 @@
+{% extends 'base.html' %} {% load static %} {% load crispy_forms_tags %}
+
+{% block title %} Generate Invoices {% endblock title %}
+
+
+{% block body %}
+
+<div class="container-fluid">
+    {% for message in messages %}
+    <div class="alert alert-{{message.tags}}" role="alert"><strong>{{message}}</strong>
+    </div>
+    {% endfor %}
+    <div class="card">
+        <div class="card-body">
+            <h2 class="">Generate Invoice</h2>
+        </div>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="row">
+
+            <div class="col-md-6">
+
+                <div class="card">
+
+                    <div class="card-header">
+                        <h4>Assigned To</h4>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="form-group">
+                            <label for="">Client:*</label>
+                            <select class="js-example-basic-multiple form-control" name="client" id="id_client" required>
+                                <option value="">----------</option>
+                                {% for i in clients %}
+                                <option value="{{i.id}}">{{i.first_name}} {{i.last_name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Title:*</label>
+                            <input type="text" name="title" id="id_title" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Due Date:*</label>
+                            <input type="date" name="due_date" id="id_due_date" class="form-control" required>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Internal Notes</h4>
+                    </div>
+                    <div class="card-body">
+
+                        <div class="form-group">
+                            <label for="">Internal Notes:</label>
+                            <textarea class="form-control" name="internal_notes" id="internal_notes"
+                                rows="8"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Items</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <select class="js-example-basic-multiple form-control items" name="items" id="id_items"
+                                multiple>
+                                {% for i in items %}
+                                <option value="{{i.id}}" data-rate="{{i.rate}}">{{i.name}}</option>
+                                {% endfor %}
+
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class=" col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Discount</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <select class="js-example-basic-multiple form-control" name="discounts" id="id_discounts"
+                                multiple>
+
+                                {% for i in discounts %}
+                                <option value="{{i.id}}" data-rate="{{i.percentage}}">{{i.name}}</option>
+                                {% endfor %}
+
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Tax</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <select class="js-example-basic-multiple form-control" name="taxes" id="id_taxes" multiple>
+
+                                {% for i in taxes %}
+                                <option value="{{i.id}}" data-rate="{{i.percentage}}">{{i.name}}</option>
+                                {% endfor %}
+
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="card card-body">
+                    <input id="calculate" class="btn btn-outline-primary" value="Create Summary">
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Summary</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-borderless">
+                                <thead class="thead-inverse">
+                                    <tr>
+                                        <th width="80%">Sub Total:</th>
+                                        <th width="20%"><input type="text" class="form-control" name="sub_total"
+                                                id="id_sub_total" value="000.00" readonly>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th width="80%">Discount Total:</th>
+                                        <th width="20%"><input type="text" class="form-control" name="discounts_total"
+                                                id="id_discounts_total" value="000.00" readonly></th>
+                                    </tr>
+                                    <tr>
+                                        <th width="80%">Tax Total:</th>
+                                        <th width="20%"><input type="text" class="form-control" name="taxes_total"
+                                                id="id_taxes_total" value="000.00" readonly></th>
+                                    </tr>
+                                    <tr>
+                                        <th width="80%">Grand Total:</th>
+                                        <th width="20%"><input type="text" class="form-control" name="grand_total"
+                                                id="id_grand_total" value="000.00" readonly></th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Terms And Conditions</h4>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="form-group">
+                            <textarea class="form-control" name="terms_and_conditions" id="id_terms_and_conditions"
+                                rows="3">
+                                {{settings.terms_and_conditions|safe}}
+                            </textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Payment Description</h4>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="form-group">
+                            <textarea class="form-control" name="payment_description" id="id_payment_description"
+                                rows="3">
+                                {{settings.payment_description|safe}}
+                            </textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Attach File</h4>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for=""></label>
+                            <input type="file" class="form-control-file dropify" name="file" id="files">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="card card-body  text-right">
+                    <button type="submit" class="btn btn-primary" id="submit">Save</button>
+                </div>
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+<script>
+    $('#calculate').on('click', function () {
+
+        var items = $("#id_items option:selected").map(function () {
+            return $(this).data("rate");
+        }).get();
+
+        var discounts = $("#id_discounts option:selected").map(function () {
+            return $(this).data("rate");
+        }).get();
+
+        var taxes = $("#id_taxes option:selected").map(function () {
+            return $(this).data("rate");
+        }).get();
+
+
+        var sub_total = 0;
+        var total_discount_percentage = 0;
+        var total_tax_percentage = 0;
+
+        var discount_total = 0;
+        var tax_total = 0;
+
+        var grand_total = 0;
+
+        for (let i = 0; i < items.length; i++) {
+            sub_total += parseFloat(items[i]);
+        }
+
+        for (let i = 0; i < discounts.length; i++) {
+            total_discount_percentage += parseFloat(discounts[i]);
+        }
+
+        for (let i = 0; i < taxes.length; i++) {
+            total_tax_percentage += parseFloat(taxes[i]);
+        }
+
+        discount_total = ((sub_total * total_discount_percentage) / 100)
+
+        tax_total = ((sub_total * total_tax_percentage) / 100)
+
+        grand_total = (sub_total - discount_total) + tax_total
+
+
+        $('#id_sub_total').val(sub_total);
+        $('#id_discounts_total').val(discount_total);
+        $('#id_taxes_total').val(tax_total);
+        $('#id_grand_total').val(grand_total);
+
+
+    });
+
+    $('#submit').on('click', function () {
+
+        var items = $("#id_items option:selected").map(function () {
+            return $(this).data("rate");
+        }).get();
+
+        var discounts = $("#id_discounts option:selected").map(function () {
+            return $(this).data("rate");
+        }).get();
+
+        var taxes = $("#id_taxes option:selected").map(function () {
+            return $(this).data("rate");
+        }).get();
+
+
+        var sub_total = 0;
+        var total_discount_percentage = 0;
+        var total_tax_percentage = 0;
+
+        var discount_total = 0;
+        var tax_total = 0;
+
+        var grand_total = 0;
+
+        for (let i = 0; i < items.length; i++) {
+            sub_total += parseFloat(items[i]);
+        }
+
+        for (let i = 0; i < discounts.length; i++) {
+            total_discount_percentage += parseFloat(discounts[i]);
+        }
+
+        for (let i = 0; i < taxes.length; i++) {
+            total_tax_percentage += parseFloat(taxes[i]);
+        }
+
+        discount_total = ((sub_total * total_discount_percentage) / 100)
+
+        tax_total = ((sub_total * total_tax_percentage) / 100)
+
+        grand_total = (sub_total - discount_total) + tax_total
+
+
+        $('#id_sub_total').val(sub_total);
+        $('#id_discounts_total').val(discount_total);
+        $('#id_taxes_total').val(tax_total);
+        $('#id_grand_total').val(grand_total);
+
+
+    });
+</script>
+
+
+
+{% endblock body %}

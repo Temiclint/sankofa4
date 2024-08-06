@@ -1,0 +1,99 @@
+{% extends 'base.html' %} {% load static %} {% load crispy_forms_tags %}
+
+{% block title %} Add Contact {% endblock title %}
+
+
+{% block body %}
+
+<div class="container-fluid">
+    {% for message in messages %}
+    <div class="alert alert-{{message.tags}}" role="alert"><strong>{{message}}</strong>
+    </div>
+    {% endfor %}
+    <div class="card">
+        <div class="card-body">
+            <h2 class="">Add Contact</h2>
+        </div>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card-body">
+                    <h4>Role</h4><br>
+                    <p>Please specify contact's role</p>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card card-body">
+                    {{form.role | as_crispy_field}}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-body">
+                    <h4>Basic Info</h4><br>
+                    <p>The name and email address of the Contact. Notifications will be sent to the primary email
+                        address.</p>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card card-body">
+                    {{form.name_prefix | as_crispy_field}}
+                    {{form.first_name | as_crispy_field}}
+                    {{form.last_name | as_crispy_field}}
+                    {{form.email | as_crispy_field}}
+                    {{form.phone_number | as_crispy_field}}
+                    {{form.website | as_crispy_field}}
+                    {{form.skype | as_crispy_field}}
+                    {{form.background_info | as_crispy_field}}
+                    {{form.avatar | as_crispy_field}}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-body">
+                    <h4>Company Details</h4><br>
+                    <p>Standard information about this Company, including the Company contact info, category, address,
+                        etc.</p>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card card-body">
+                    {{form.company | as_crispy_field}}
+                    {{form.designation | as_crispy_field}}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-body">
+                    <h4>Location Info</h4><br>
+                    <p>Additional Company info, including your mailing address and other geography. By default, this
+                        address information will be displayed in other platform areas (ex. Estimates/Invoices sent to
+                        Prospect(s)/Client(s)). Also, you can set your primary Company time zone and your preferred date
+                        format.</p>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card card-body">
+                    {{form.address | as_crispy_field}}
+                    {{form.city | as_crispy_field}}
+                    {{form.zip_code | as_crispy_field}}
+                    {{form.state | as_crispy_field}}
+                    {{form.country | as_crispy_field}}
+                </div>
+            </div>
+            <div class="col-md-4"></div>
+            <div class="col-md-8">
+                <div class="card card-body">
+                    <div class="text-right">
+                        <a href="{% url 'crm:contacts' %}" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+</div>
+
+{% endblock body %}

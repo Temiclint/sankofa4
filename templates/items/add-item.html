@@ -1,0 +1,48 @@
+{% extends 'base.html' %} {% load static %} {% load crispy_forms_tags %}
+
+{% block title %} Add Item {% endblock title %}
+
+
+{% block body %}
+
+<div class="container-fluid">
+    {% for message in messages %}
+    <div class="alert alert-{{message.tags}}" role="alert"><strong>{{message}}</strong>
+    </div>
+    {% endfor %}
+    <div class="card">
+        <div class="card-body">
+            <h2 class="">Add Item</h2>
+        </div>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card-body">
+                    <h4>Item Detail</h4><br>
+                    <p>All of the item details</p>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card card-body">
+                    {{form | crispy}}
+                </div>
+            </div>
+            <div class="col-md-4"></div>
+            <div class="col-md-8">
+                <div class="card card-body">
+                    <div class="text-right">
+                        <a href="{% url 'crm:items' %}" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+</div>
+
+{% endblock body %}

@@ -1,0 +1,146 @@
+{% extends 'base.html' %} {% load static %}
+
+
+{% block title %} Inbox {% endblock title %}
+
+
+{% block body %}
+
+<div class="container-fluid">
+
+    <div class="row">
+
+        <div class="col-sm-12">
+            <div class="inbox-app-main">
+                <div class="row">
+                    <div class="col-md-3">
+                        <aside id="sidebar" class="nano">
+                            <div class="nano-content">
+
+                                <div class="text-center">
+                                    <button type="button"
+                                        class="btn btn-danger btn-rounded width-lg waves-effect waves-light mb-2 mt-3"
+                                        data-toggle="modal" data-target="#exampleModalScrollable">Compose</button>
+                                </div>
+                                <menu class="menu-segment">
+                                    <ul class="list-unstyled">
+                                        <li><a href="{% url 'crm:inbox' %}"><i class="fa fa-commenting-o"></i>&nbsp
+                                                Inbox</a>
+                                        </li>
+                                        <li><a href="{% url 'crm:sent-messages' %}"><i
+                                                    class="fa fa-paper-plane-o"></i>&nbsp
+                                                Sent</a></li>
+                                        <!-- <li><a href="{% url 'crm:signature-messages' %}"><i
+                                                    class="fa fa-archive"></i>&nbsp
+                                                Signatures</a></li> -->
+                                        <li class="active"><a href="{% url 'crm:trash-messages' %}"><i
+                                                    class="fa fa-trash-o"></i>&nbsp
+                                                Trash</a>
+                                        </li>
+                                    </ul>
+                                </menu>
+                                <div class="separator"></div>
+                                <div class="bottom-padding"></div>
+                            </div>
+                        </aside>
+                    </div>
+
+                    <div class="col-md-9">
+                        <main id="main">
+                            <div class="card-header">
+                                <h2>Trash items</h2>
+                            </div>
+
+                            <div id="main-nano-wrapper" class="nano">
+                                <div class="nano-content">
+                                    <ul class="message-list">
+
+
+                                        {% if msgs|length %}
+
+                                        {% for i in msgs %}
+
+                                        {% if i.is_read %}
+
+                                        <li class="thread convesrsation" data-id="{{i.id}}">
+                                            <div class="mail-col mail-col-1"><span class="dot"></span>
+                                                <p class="title">{{i.sender.first_name | title}}
+                                                    {{i.sender.last_name | title}}</p><i
+                                                    class="fa fa-envelope-open-o"></i>
+                                            </div>
+                                            <div class="mail-col mail-col-2">
+                                                <div class="subject">{{i.subject|capfirst}}
+                                                </div>
+                                                <div class="date">{{i.created.date}}</div>
+                                            </div>
+                                        </li>
+
+                                        {% else %}
+                                        <li class="unread convesrsation" data-id="{{i.id}}">
+                                            <div class="mail-col mail-col-1"><span class="dot"></span>
+                                                <p class="title">{{i.sender.first_name | title}}
+                                                    {{i.sender.last_name | title}}</p><i class="fa fa-envelope-o"></i>
+                                            </div>
+                                            <div class="mail-col mail-col-2">
+                                                <div class="subject">{{i.subject|capfirst}}
+                                                </div>
+                                                <div class="date">{{i.created.date}}</div>
+                                            </div>
+                                        </li>
+
+                                        {% endif %}
+
+                                        {% endfor %}
+
+
+                                        {% else %}
+
+                                        <div class="crad-header mt-4">
+                                            <h4 class="text-center">No message found
+                                            </h4>
+                                        </div>
+
+                                        {% endif %}
+
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </main>
+                        <div id="message">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+{% include 'messaging/create-message.html' %}
+
+<script>
+    $('.convesrsation').on('click', function () {
+        var id = $(this).data("id");
+        var url = "{% url 'crm:view-message' %}";
+
+        data = {
+            id: id,
+        }
+
+        $.ajax({
+            url: url,
+            data: data,
+
+            success: function (data) {
+                $('#message').html(data);
+            }
+        })
+    })
+</script>
+
+{% endblock body %}

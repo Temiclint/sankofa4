@@ -1,0 +1,421 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title> {% block title %} {% endblock title %} | Sankofa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+    <meta content="Coderthemes" name="author" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="{% static 'images/logo-sm.png' %}">
+
+    <!-- ChartJS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="https://cdn.lordicon.com/lordicon-1.2.0.js"></script>
+
+    <!-- dropify -->
+    <link href="{% static 'libs/dropify/dropify.min.css' %}" rel="stylesheet" type="text/css" />
+
+    <!-- Plugins css -->
+    <link href="{% static 'libs/bootstrap-tagsinput/bootstrap-tagsinput.css' %}" rel="stylesheet" />
+    <link href="{% static 'libs/switchery/switchery.min.css' %}" rel="stylesheet" type="text/css" />
+
+    <!-- ======== JQuery ======= -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+    <!-- Plugins css -->
+    <link href="{% static 'libs/quill/quill.core.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'libs/quill/quill.bubble.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'libs/quill/quill.snow.css' %}" rel="stylesheet" type="text/css" />
+
+    <!-- ======== CK Editor CDN ======= -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/34.1.0/classic/ckeditor.js"></script>
+
+    <!-- ======== Fontawesome CDN ======= -->
+    <script src="https://kit.fontawesome.com/6aa1b41185.js" crossorigin="anonymous"></script>
+    <script src="https://use.fontawesome.com/45ba448a8e.js"></script>
+
+    <!-- Plugins css -->
+    <link href="{% static 'libs/quill/quill.core.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'libs/quill/quill.bubble.css' %}" rel="stylesheet" type="text/css" />
+
+    <!-- Custom box css -->
+    <link href="{% static 'libs/custombox/custombox.min.css' %}" rel="stylesheet">
+
+    <!-- Bootstrap Css -->
+    <link href="{% static 'css/bootstrap.min.css' %}" id="bootstrap-stylesheet" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="{% static 'css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="{% static 'css/app.min.css' %}" id="app-stylesheet" rel="stylesheet" type="text/css" />
+
+
+    <style>
+        .select2-selection__choice__display {
+            color: black
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- Begin page -->
+    <div id="wrapper">
+
+        <!-- Topbar Start -->
+        <div class="navbar-custom">
+
+            <ul class="list-unstyled topnav-menu float-right mb-0">
+
+
+                <li class="dropdown notification-list">
+                    <a class="nav-link dropdown-toggle nav-user mr-0 waves-effect" data-toggle="dropdown" href="#"
+                        role="button" aria-haspopup="false" aria-expanded="false">
+                        <img src="{{request.user.profile.image.url}}" alt="user-image" class="rounded-circle">
+                        <span class="pro-user-name ml-1">
+                            {{request.user.first_name | title}} {{request.user.last_name | title}}<i
+                                class="mdi mdi-chevron-down"></i>
+                        </span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
+                        <a href="{% url 'crm:profile' %}" class="dropdown-item notify-item">
+                            <i class="fe-user"></i>
+                            <span>Profile</span>
+                        </a>
+                        <a href="{% url 'crm:logout' %}" class="dropdown-item notify-item">
+                            <i class="fe-log-out"></i>
+                            <span>Logout</span>
+                        </a>
+
+                    </div>
+                </li>
+
+
+            </ul>
+
+            <!-- LOGO -->
+            <div class="logo-box">
+                <a href="/" class="logo logo-dark text-center">
+                    <span class="logo-lg">
+                        <img src="{% static 'images/logo.png' %}" alt="" height="50">
+                    </span>
+                    <span class="logo-sm">
+                        <img src="assets/images/logo-sm.png" alt="" height="50">
+                    </span>
+                </a>
+                <a href="/" class="logo logo-light text-center">
+                    <span class="logo-lg">
+                        <img src="{% static 'images/logo.png' %}" alt="" height="50">
+                    </span>
+                    <span class="logo-sm">
+                        <img src="{% static 'images/logo-sm.png' %}" alt="" height="50">
+                    </span>
+                </a>
+            </div>
+
+            <ul class="list-unstyled topnav-menu topnav-menu-left mb-0">
+                <li>
+                    <button class="button-menu-mobile disable-btn waves-effect">
+                        <i class="fe-menu"></i>
+                    </button>
+                </li>
+
+
+            </ul>
+
+        </div>
+        <!-- end Topbar -->
+
+        <!-- ========== Left Sidebar Start ========== -->
+        <div class="left-side-menu">
+
+            <div class="slimscroll-menu">
+
+                <!-- User box -->
+                <div class="user-box text-center mt-2 mb-3">
+                    
+                    {% if request.user.profile.image %}
+                    <img src="{{request.user.profile.image.url}}" alt="user-img" title="{{request.user.get_full_name}}"
+                    class="rounded-circle img-thumbnail avatar-lg">
+                    {% else %}
+                    <img src="{% static 'images/profile.jpg' %}" alt="user-img" title="{{request.user.get_full_name}}"
+                        class="rounded-circle img-thumbnail avatar-lg">
+                    {% endif %}
+                        
+                    <div class="dropdown">
+                        <a href="#" class="user-name dropdown-toggle h3 mt-2 mb-1 d-block" data-toggle="dropdown"
+                            aria-expanded="false">{{request.user.first_name | title}}
+                            {{request.user.last_name | title}}</a>
+                    </div>
+                </div>
+
+                <!--- Sidemenu -->
+                <div id="sidebar-menu">
+
+                    <ul class="metismenu" id="side-menu">
+
+                        <li>
+                            <a href="{% url 'crm:dashboard' %}">
+                                <i class="mdi mdi-view-dashboard"></i>
+                                <span> Dashboard </span>
+                            </a>
+                        </li>
+
+
+                        {% if perms.crm.view_company %}
+                        <li>
+                            <a href="{% url 'crm:companies' %}">
+                                <i class="fa fa-building-o" aria-hidden="true"></i>
+                                <span> Companies </span>
+                            </a>
+                        </li>
+                        {% endif %}
+
+                        {% if perms.crm.view_contact %}
+                        <li>
+                            <a href="{% url 'crm:contacts' %}">
+                                <i class="fa fa-phone-square" aria-hidden="true"></i>
+                                <span> Contacts </span>
+                            </a>
+                        </li>
+                        {% endif %}
+
+                        {% if perms.crm.view_circle %}
+                        <li>
+                            <a href="{% url 'crm:circles' %}">
+                                <i class="fa fa-circle-o" aria-hidden="true"></i>
+                                <span> Circle </span>
+                            </a>
+                        </li>
+                        {% endif %}
+
+                        {% if perms.crm.view_event %}
+                        <li>
+                            <a href="{% url 'crm:events' %}">
+                                <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
+                                <span> Events </span>
+                            </a>
+                        </li>
+                        {% endif %}
+
+                        {% if perms.crm.view_invoice %}
+                        <li>
+                            <a href="{% url 'crm:invoices' %}"><i class="fa fa-th-list mr-1"></i>Invoices</a>
+                        </li>
+                        {% endif %}
+
+                        {% if perms.crm.view_estimate %}
+                        <li>
+                            <a href="{% url 'crm:estimates' %}"><i
+                                class="fa fa-list-alt mr-1"></i>Quotations</a>
+                        </li>
+                        {% endif %}
+
+                        {% if perms.crm.view_document %}
+                        <li>
+                            <a href="{% url 'crm:documents' %}"><i class="fa fa-file-o mr-1"
+                                aria-hidden="true"></i> Documents</a>
+                        </li>
+                        {% endif %}
+                        <!-- <li>
+                            <a href="{% url 'crm:inbox' %}">
+                                <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                                <span> Messaging </span>
+                            </a>
+                        </li> -->
+                        {% if perms.crm.view_item %}
+                        <li>
+                            <a href="{% url 'crm:items' %}">
+                                <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                                <span> Inventory </span>
+                            </a>
+                        </li>
+                        {% endif %}
+
+                        {% if perms.auth.view_user %}
+                        <li>
+                            <a href="{% url 'crm:staff-users' %}">
+                                <i class="fa fa-group" aria-hidden="true"></i>
+                                <span> Staff Users </span>
+                            </a>
+                        </li>
+                        {% endif %}
+
+
+                        {% if perms.auth.view_group %}
+                        <li>
+                            <a href="{% url 'crm:roles' %}">
+                                <i class="fa fa-shield" aria-hidden="true"></i>
+                                <span> Roles and Perm </span>
+                            </a>
+                        </li>
+                        {% endif %}
+
+
+                        <li>
+                            <a href="javascript: void(0);">
+                                <i class="fa fa-cogs" aria-hidden="true"></i>
+                                <span> Settings </span>
+                                <span class="menu-arrow"></span>
+                            </a>
+                            <ul class="nav-second-level" aria-expanded="false">
+                                {% if perms.crm.view_tax %}
+                                <li> <a href="{% url 'crm:taxes' %}"><i class="fa fa-money mr-1"></i>Taxes</a> </li>
+                                {% endif %}
+                                {% if perms.crm.view_discount %}
+                                <li> <a href="{% url 'crm:discounts' %}"><i class="fa fa-tag mr-1"></i>Discounts</a> </li> 
+                                {% endif %}
+                                {% if perms.crm.view_template %}
+                                <li> <a href="{% url 'crm:templates' %}"><i class="fa fa-sticky-note mr-1"></i>Templates</a> </li>
+                                {% endif %}
+                                {% if perms.crm.view_invoicesetting %}
+                                <li> <a href="{% url 'crm:invoice-setting' %}"><i class="fa fa-wrench mr-1"></i>Invoice Settings</a> </li>
+                                {% endif %}
+                                {% if perms.crm.view_estimatesetting %}
+                                <li> <a href="{% url 'crm:estimate-setting' %}"><i class="fa fa-wrench mr-1"></i>Quotation Settings</a> </li>
+                                {% endif %}
+                                {% if perms.crm.view_comppanycategory %}
+                                <li> <a href="{% url 'crm:company-categories' %}"><i class="fa fa-list mr-1"></i> Company Categories</a></li>
+                                {% endif %}
+                                {% if perms.crm.view_eventcategory %}
+                                <li> <a href="{% url 'crm:event-categories' %}"><i class="fa fa-list mr-1"></i> Event Categories</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="{% url 'crm:profile' %}">
+                                <i class="fa fa-user" aria-hidden="true"></i>
+                                <span> Profile </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'crm:logout' %}">
+                                <i class="fa fa-power-off" aria-hidden="true"></i>
+                                <span> Logout </span>
+                            </a>
+                        </li>
+
+
+                    </ul>
+
+                </div>
+                <!-- End Sidebar -->
+
+                <div class="clearfix"></div>
+
+            </div>
+            <!-- Sidebar -left -->
+
+        </div>
+        <!-- Left Sidebar End -->
+
+        <!-- ============================================================== -->
+        <!-- Start Page Content here -->
+        <!-- ============================================================== -->
+
+        <div class="content-page">
+            <div class="content">
+
+
+
+                {% block body %} {% endblock body %}
+
+
+            </div> <!-- content -->
+            <!-- Footer Start -->
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6">
+                            {% now 'Y' %} &copy; CRM by <a href="#">MMS Studios</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+            <!-- end Footer -->
+
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- End Page content -->
+        <!-- ============================================================== -->
+
+
+    </div>
+    <!-- END wrapper -->
+
+    <script>
+        $(document).ready(function () {
+            $(".django-ckeditor-widget").css("width", "100%")
+        });
+    </script>
+
+    <!-- Vendor js -->
+    <script src="{% static 'js/vendor.min.js' %}"></script>
+
+    <!-- knob plugin -->
+    <script src="{% static 'libs/jquery-knob/jquery.knob.min.js' %}"></script>
+
+    <!--Morris Chart-->
+    <script src="{% static 'libs/morris-js/morris.min.js' %}"></script>
+    <script src="{% static 'libs/raphael/raphael.min.js' %}"></script>
+
+    <!-- Dashboard init js-->
+    <script src="{% static 'js/pages/dashboard.init.js' %}"></script>
+
+    <!-- App js -->
+    <script src="{% static 'js/app.min.js' %}"></script>
+
+    <!-- Modal-Effect -->
+    <script src="{% static 'libs/custombox/custombox.min.js' %}"></script>
+
+    <!-- dropify js -->
+    <script src="{% static 'libs/dropify/dropify.min.js' %}"></script>
+
+    <!-- form-upload init -->
+    <script src="{% static 'js/pages/form-fileupload.init.js' %}"></script>
+
+    <!-- messaging js  -->
+    <script src="{% static 'js/pages/inbox.init.js' %}"></script>
+
+    <!-- Plugins js -->
+    <script src="{% static 'libs/katex/katex.min.js' %}"></script>
+    <script src="{% static 'libs/quill/quill.min.js' %}"></script>
+
+    <!-- Modal-Effect -->
+    <script src="{% static 'libs/custombox/custombox.min.js' %}"></script>
+
+    <script src="{% static 'libs/multiselect/jquery.multi-select.js' %}"></script>
+    <script src="{% static 'libs/jquery-quicksearch/jquery.quicksearch.min.js' %}"></script>
+
+    <script src="{% static 'libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js' %}"></script>
+
+    <script src="{% static 'libs/bootstrap-tagsinput/bootstrap-tagsinput.min.js' %}"></script>
+    <script src="{% static 'libs/switchery/switchery.min.js' %}"></script>
+
+    <script src="{% static 'js/pages/form-advanced.init.js' %}"></script>
+
+
+    <!-- ======== Select 2 ======= -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="http://maps.google.com/maps/api/js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('.js-example-basic-multiple').select2({
+                placeholder: "Make a selection",
+            });
+        });
+    </script>
+
+</body>
+
+</html>

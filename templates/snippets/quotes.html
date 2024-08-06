@@ -1,0 +1,47 @@
+{% if quotes|length %}
+        <div class="table-responsive">
+            <table class="table table-striped table-sm">
+                <thead class="thead-inverse">
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Grand Total</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
+                        <th class="text-center">View</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% for i in quotes %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{i.title}}</td>
+                        <td>${{i.grand_total}}</td>
+                        <td>{{i.due_date.date}}</td>
+                        <td>
+
+                            {% if i.status == 1 %}
+                            <span class="badge badge-secondary">{{i.get_status_display}}</span>
+                            {% elif i.status == 2 %}
+                            <span class="badge badge-success">{{i.get_status_display}}</span>
+                            {% else %}
+                            <span class="badge badge-danger">{{i.get_status_display}}</span>
+                            {% endif %}
+
+                        </td>
+                        <td class="text-center">
+                            <a href="{% url 'crm:view-estimate' i.estimate_number %}" class="text-primary"><i
+                                    class="fa fa-eye"></i></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="card-header text-center">
+            <h4>No record found</h4>
+        </div>
+        {% endif %}

@@ -1,0 +1,116 @@
+{% load crispy_forms_tags %}
+
+<div id="custom-modal" class="modal-demo text-left">
+    <button type="button" class="close" onclick="Custombox.modal.close();">
+        <span>&times;</span><span class="sr-only">Close</span>
+    </button>
+    <h5 class="custom-modal-title">Compose Message</h5>
+    <div class="card-box mb-0">
+        <form method="POST">
+            {% csrf_token %}
+
+
+
+            <div class="btn-toolbar form-group mb-0">
+                <div class="float-right">
+                    <button class="btn btn-purple waves-effect waves-light float-right"><span>Send</span> <i
+                            class="fas fa-paper-plane ml-1"></i></button>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+
+<!-- Long Content Scroll Modal -->
+<div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+
+        <div class="modal-content">
+            <form method="POST" action="{% url 'crm:send-message' %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h4 class="modal-title" id="exampleModalScrollableTitle">Compose Message</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="fvrduplicate">
+                        <div class="row">
+                            <div class="col-md-10">
+                                <div class="form-group">
+                                    <label for="exampleInputName2">Recepient*</label>
+                                    <select class="form-control" name="recievers" id="recievers" required>
+                                        <option value="">-----</option>
+
+                                        {% for i in users %}
+
+                                        {% if i != request.user %}
+                                        <option value="{{i.id}}">{{i.first_name| title}}
+                                            {{i.last_name| title}}</option>
+                                        {% endif %}
+
+                                        {% endfor %}
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-success btn-block btn-add mt-4" type="button"><i
+                                        class="fa fa-plus"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{form.media}}
+                    {{form|crispy}}
+
+                    <div class="form-group">
+                        <label for="">Attachments:</label>
+                        <input type="file" class="dropify" data-height="80" multiple="multiple" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-purple waves-effect waves-light"><i
+                            class="fa fa-paper-plane-o"></i>&nbsp Send</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(function () {
+        $(document).ready(function () {
+            var buttonadd =
+                '';
+            var fvrhtmlclone = '<div class=" fvrclonned">' + $(".fvrduplicate").html() +
+                buttonadd + '</div>';
+            $(".fvrduplicate").html(fvrhtmlclone);
+            $(".fvrduplicate").after('<div class="fvrclone"></div>');
+
+            $(document).on('click', '.btn-add', function (e) {
+                e.preventDefault();
+
+                $(".fvrclone").append(fvrhtmlclone);
+                $(this).removeClass('btn-add').addClass('btn-remove')
+                    .removeClass('btn-success').addClass('btn-danger')
+                    .html('<i class="fa fa-minus"></i>');
+
+            }).on('click', '.btn-remove', function (e) {
+                $(this).parents('.fvrclonned').remove();
+
+                e.preventDefault();
+                return false;
+            });
+
+        });
+
+    });
+</script>

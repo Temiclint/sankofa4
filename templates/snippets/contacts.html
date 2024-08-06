@@ -1,0 +1,42 @@
+{% if contacts|length %}
+        <div class="table-responsive">
+            <table class="table table-sm table striped">
+                <thead class="thead-inverse">
+                    <tr class="text-center">
+                        <th>#</th>
+                        <th class="text-left">Name</th>
+                        <th>Company</th>
+                        <th>Designation</th>
+                        <th>Role</th>
+                        <th>Options</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% for i in contacts %}
+                    <tr class="text-center">
+                        <td scope="row">{{forloop.counter}}</td>
+                        <td class="text-left">{{i.name_prefix | title}} {{i.first_name | title}} {{i.last_name | title}}
+                        </td>
+                        <td>{{i.company | title}}</td>
+                        <td>{{i.designation | title}}</td>
+                        <td>{{i.get_role_display | title}}</td>
+                        <td>
+                            {% if perms.crm.change_contact %}
+                            <a href="{% url 'crm:update-contact' i.id %}" class="mr-1 text-success"><i class="fa fa-pencil"></i></a>
+                            {% endif %}
+                            {% if perms.crm.delete_contact %}
+                            <a href="{% url 'crm:delete-contact' i.id %}" class="mr-1 text-danger"><i class="fa fa-trash"></i></a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="card-header text-center">
+            <h4>No record found</h4>
+        </div>
+        {% endif %}
